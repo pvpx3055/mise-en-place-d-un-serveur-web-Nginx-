@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Groupe 3 - Quiz Culture G</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0f1e, #0b1120);
+            font-family: 'Courier New', 'Fira Code', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .quiz-container {
+            background: rgba(8, 18, 28, 0.9);
+            backdrop-filter: blur(4px);
+            border: 2px solid #00ffcc;
+            border-radius: 32px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.25);
+            padding: 2rem;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #00ffcc;
+            font-size: 2rem;
+            text-align: center;
+            text-shadow: 0 0 5px #00ffcc;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #88aaff;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            border-bottom: 1px dashed #00ffcc;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 0.3rem;
+        }
+
+        .question-area {
+            background: #07121c;
+            border-radius: 24px;
+            padding: 1.8rem;
+            margin: 1.2rem 0;
+            border: 1px solid #2a3f5e;
+        }
+
+        .question-text {
+            color: #ffdd99;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .answer-btn {
+            background: #0f1a24;
+            border: 1px solid #2e4a6e;
+            color: #bbddff;
+            padding: 12px 16px;
+            font-family: monospace;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: all 0.2s;
+        }
+
+        .answer-btn:hover {
+            background: #1a2f40;
+            border-color: #00ffcc;
+            transform: translateX(6px);
+            color: #ffffff;
+        }
+
+        .answer-btn.disabled, .answer-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            background: #0a1420;
+            padding: 14px;
+            border-radius: 20px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+            color: #ccffcc;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            color: #00ffcc;
+        }
+
+        .next-btn {
+            background: #00ffcc;
+            border: none;
+            padding: 12px 24px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            transition: 0.2s;
+            color: #0a0f1e;
+        }
+
+        .next-btn:hover {
+            background: #ffcc00;
+            transform: scale(1.02);
+            box-shadow: 0 0 10px #ffcc00;
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px solid #ff8866;
+            color: #ff8866;
+            padding: 8px 16px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #ff886622;
+            border-color: #ffaa88;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 1.2rem;
+            font-size: 0.7rem;
+            color: #446688;
+        }
+
+        .group-badge {
+            text-align: center;
+            color: #55aacc;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>⚡ CULTURE GEEK ⚡</h1>
+    <div class="group-badge">🎓 GROUPE 3 – Défi cyber</div>
+
+    <div id="quizMain">
+        <div class="question-area">
+            <div class="question-text" id="questionText">Chargement...</div>
+            <div class="answers" id="answersContainer"></div>
+            <div class="feedback" id="feedbackMsg">✅ Réponds aux questions !</div>
+            <div class="score" id="scoreDisplay">💯 Score : 0 / 0</div>
+            <button class="next-btn" id="nextBtn">➡ QUESTION SUIVANTE</button>
+            <button class="reset-btn" id="resetBtn">🔄 Recommencer le quiz</button>
+        </div>
+    </div>
+    <footer>
+        🧠 Culture générale | Serveur Nginx – Groupe 3
+    </footer>
+</div>
+
+<script>
+    // ---------- BASE DE QUESTIONS ----------
+    const questions = [
+        {
+            text: "Quel est le langage principalement utilisé pour le développement web côté serveur ?",
+            options: ["Python", "JavaScript (Node.js)", "PHP", "Tous ceux cités"],
+            correct: 3
+        },
+        {
+            text: "Que signifie 'OS' en informatique ?",
+            options: ["Open System", "Operating System", "Ordinateur Système", "Online Server"],
+            correct: 1
+        },
+        {
+            text: "Quelle commande Linux permet d'afficher le contenu d'un fichier ?",
+            options: ["ls", "pwd", "cat", "echo"],
+            correct: 2
+        },
+        {
+            text: "À quoi sert Nginx ?",
+            options: ["Navigateur web", "Serveur web / reverse proxy", "Base de données", "Langage de programmation"],
+            correct: 1
+        },
+        {
+            text: "Que représente l'adresse IP 127.0.0.1 ?",
+            options: ["Passerelle par défaut", "Serveur DNS", "localhost (soi-même)", "Adresse publique Google"],
+            correct: 2
+        },
+        {
+            text: "Le HTML est un langage...",
+            options: ["De programmation", "De balisage", "Compilé", "Orienté objet"],
+            correct: 1
+        },
+        {
+            text: "Quel protocole est utilisé pour la navigation web sécurisée ?",
+            options: ["HTTP", "FTP", "HTTPS", "SSH"],
+            correct: 2
+        }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let quizFinished = false;
+    let answered = false;
+
+    // DOM elements
+    const questionText = document.getElementById('questionText');
+    const answersContainer = document.getElementById('answersContainer');
+    const feedbackMsg = document.getElementById('feedbackMsg');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function updateScoreUI() {
+        scoreDisplay.innerHTML = `💯 Score : ${score} / ${questions.length}`;
+    }
+
+    function loadQuestion() {
+        answered = false;
+        const q = questions[currentIndex];
+        questionText.innerText = q.text;
+        
+        // Générer les boutons réponses
+        answersContainer.innerHTML = '';
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.innerText = `${String.fromCharCode(65+idx)}. ${opt}`;  // A., B., C., D.
+            btn.classList.add('answer-btn');
+            btn.addEventListener('click', () => handleAnswer(idx));
+            answersContainer.appendChild(btn);
+        });
+
+        // Réactiver les boutons
+        document.querySelectorAll('.answer-btn').forEach(btn => {
+            btn.disabled = false;
+            btn.classList.remove('disabled');
+        });
+
+        // Afficher message neutre
+        feedbackMsg.innerHTML = "🤔 Choisis une réponse !";
+        feedbackMsg.style.color = "#bbddff";
+        nextBtn.disabled = false;
+        nextBtn.innerText = "➡ QUESTION SUIVANTE";
+    }
+
+    function handleAnswer(selectedIdx) {
+        if (answered) {
+            feedbackMsg.innerHTML = "⚠️ Tu as déjà répondu à cette question !";
+            feedbackMsg.style.color = "#ffaa88";
+            return;
+        }
+        
+        const q = questions[currentIndex];
+        const isCorrect = (selectedIdx === q.correct);
+        
+        if (isCorrect) {
+            score++;
+            feedbackMsg.innerHTML = "✅ BRAVO ! Bonne réponse !";
+            feedbackMsg.style.color = "#aaffaa";
+        } else {
+            const correctLetter = String.fromCharCode(65 + q.correct);
+            feedbackMsg.innerHTML = `❌ Dommage ! La bonne réponse était : ${correctLetter}. ${q.options[q.correct]}`;
+            feedbackMsg.style.color = "#ffaaaa";
+        }
+        
+        answered = true;
+        updateScoreUI();
+        
+        // Désactiver les boutons réponses
+        document.querySelectorAll('.answer-btn').forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+        });
+    }
+
+    function nextQuestion() {
+        if (!answered && currentIndex < questions.length) {
+            feedbackMsg.innerHTML = "⚠️ Réponds d'abord à la question avant de continuer !";
+            feedbackMsg.style.color = "#ffaa88";
+            return;
+        }
+        
+        if (currentIndex + 1 < questions.length) {
+            currentIndex++;
+            loadQuestion();
+        } else {
+            // Fin du quiz
+            quizFinished = true;
+            const percentage = Math.round((score / questions.length) * 100);
+            let gradeMessage = "";
+            if (percentage >= 80) gradeMessage = "🏆 Excellent ! Champion de culture G !";
+            else if (percentage >= 60) gradeMessage = "🎉 Solide ! Continue comme ça.";
+            else if (percentage >= 40) gradeMessage = "📚 Pas mal, revise un peu et retente.";
+            else gradeMessage = "💪 Rebondis ! Rejoue pour t'améliorer.";
+            
+            questionText.innerText = `🎯 Quiz terminé ! Score final : ${score}/${questions.length} (${percentage}%)`;
+            answersContainer.innerHTML = `<div style="color:#88ccff; text-align:center; padding:1rem;">${gradeMessage}<br><br>✨ Clique sur 'Recommencer' pour un nouveau quiz ✨</div>`;
+            feedbackMsg.innerHTML = "📌 Merci d'avoir joué !";
+            feedbackMsg.style.color = "#88aaff";
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = "0.5";
+            updateScoreUI();
+        }
+    }
+
+    function resetQuiz() {
+        currentIndex = 0;
+        score = 0;
+        answered = false;
+        quizFinished = false;
+        updateScoreUI();
+        loadQuestion();
+        feedbackMsg.innerHTML = "🔄 Quiz réinitialisé ! Bonne chance.";
+        feedbackMsg.style.color = "#ccffcc";
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = "1";
+    }
+
+    // Event listeners
+    nextBtn.addEventListener('click', nextQuestion);
+    resetBtn.addEventListener('click', resetQuiz);
+    
+    // Initialisation
+    loadQuestion();
+    updateScoreUI();
+</script>
+</body>
+</html>
