@@ -1,0 +1,8 @@
+Telecharger et installer vurtualbox via le site officielle : https://www.virtualbox.org/wiki/Downloads
+Telecharger et installer le fichiers iso de notre distribution linux (Ubuntu) via le site officielle : https://ubuntu.com/download
+Creer une machine virtuelle , s'assurer d'accorder au moins 1 cpu et 128 mb de la memoire de la carte graphique a cette derniere 
+NB: guarder en tete le mdp mis lors de la creation 
+Attendre l'installation de Ubuntu 
+mettre a jour Ubuntu et ses differents logicielle 
+  sudo apt update
+  sudo apt upgrade -y
