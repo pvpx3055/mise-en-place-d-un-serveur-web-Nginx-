@@ -1,0 +1,20 @@
+Installer Nginx via l'invite de commande ( crt + alt + t) avec la commande : sudo apt install nginx -y
+Maintenant demarons et verifions qu'il tourne correctement : sudo systemctl start nginx / sudo sysmectl enable nginx ( se lance seul au demarrage ) / sudo systemctl status nginx ( affiche "running")
+Ouvrons Firefox et chercons http://localhost
+Now creons un dossier pour notre site : sudo mkdir -p /var/www/groupe3/sn
+Puis utilisons nano pour editer notre site : sudo nano /var/www/groupe3thebest/sn/index.html
+Puis on colle notre code html dedans et on sauvegarde : ctrl + o puis ctrl + x pour quitter 
+Creons notre fichiers de configuration virtualhost : sudo nano /etc/nginx/sites-available/groupe3
+Puis on colle : server{
+                        listen 80;
+                        server_name localhost;
+
+                        root /var/groupe3thebest/sn
+                        index index.htlm;
+                      }
+Activons le : sudo ln -s /etc/nginx/sites-available/groupe /etc/nginx/sites-enabled/
+Et on desactive l'autre la : sudo rm /etc/nginx/sites-enabled/default
+Toujours verifier avant de recharger  : sudo nginx -t
+Si ok : sudo system reload nginx 
+puis enfin on rouvre dans notre navigateur : http://group3
+  
